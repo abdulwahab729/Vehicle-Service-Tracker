@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  ADVISOR
+  TECHNICIAN
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  UNPAID
+  PAID
+  OVERDUE
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String?    @unique
+  phone     String?
+  role      Role       @default(TECHNICIAN)
+  password  String     
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  jobs      JobOrder[] 
+}
+
+model Customer {
+  id        String    @id @default(uuid())
+  firstName String
+  lastName  String?
+  email     String?
+  phone     String
+  address   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  vehicles  Vehicle[]
+  invoices  Invoice[]
+}
+
+model Vehicle {
+  id             String          @id @default(uuid())
+  customerId     String
+  customer       Customer        @relation(fields: [customerId], references: [id])
+  make           String
+  model          String
+  year           Int
+  licensePlate   String          @unique
+  vin            String?         @unique
+  color          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  jobs           JobOrder[]
+  serviceRecords ServiceRecord[]
+  reminders      MaintenanceReminder[]
+}
+
+model Part {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  partNumber  String         @unique
+  stockLevel  Int            @default(0)
+  unitPrice   Float
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  JobPart     JobPart[]
+}
+
+model JobOrder {
+  id          String      @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle     @relation(fields: [vehicleId], references: [id])
+  userId      String?     
+  technician  User?       @relation(fields: [userId], references: [id])
+  status      JobStatus   @default(PENDING)
+  description String
+  notes       String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  partsUsed   JobPart[]
+  Invoice     Invoice?
+  ServiceRecord ServiceRecord?
+}
+
+model JobPart {
+  id         String   @id @default(uuid())
+  jobOrderId String
+  jobOrder   JobOrder @relation(fields: [jobOrderId], references: [id])
+  partId     String
+  part       Part     @relation(fields: [partId], references: [id])
+  quantity   Int
+  priceAtUse Float    
+  createdAt  DateTime @default(now())
+}
+
+model ServiceRecord {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  jobOrderId  String?  @unique
+  jobOrder    JobOrder? @relation(fields: [jobOrderId], references: [id])
+  date        DateTime @default(now())
+  mileage     Int
+  serviceDone String
+  technician  String   
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model Invoice {
+  id          String        @id @default(uuid())
+  customerId  String
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  jobOrderId  String        @unique
+  jobOrder    JobOrder      @relation(fields: [jobOrderId], references: [id])
+  status      InvoiceStatus @default(DRAFT)
+  totalAmount Float
+  partsAmount Float?        @default(0)
+  taxAmount   Float?        @default(0)
+  discount    Float?        @default(0)
+  dueDate     DateTime?
+  issuedDate  DateTime      @default(now())
+  paidDate    DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  COMPLETED
+  CANCELLED
+}
+
+model MaintenanceReminder {
+  id          String         @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle        @relation(fields: [vehicleId], references: [id])
+  description String
+  dueDate     DateTime
+  status      ReminderStatus @default(PENDING)
+  sentAt      DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+
+

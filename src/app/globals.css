@@ -1,0 +1,397 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+/* ── Design Tokens ────────────────────────────────────────── */
+@theme {
+  --color-background: #060d1a;
+  --color-foreground: #f0f4ff;
+  --color-primary:    #4f8ef7;
+  --color-surface:    #0f1c2e;
+  --color-border:     #1e3050;
+}
+
+@layer base {
+  :root {
+    --bg:          #f4f7ff;
+    --fg:          #0c1428;
+    --primary:     #2563eb;
+    --surface:     #ffffff;
+    --surface-2:   #f0f4ff;
+    --border:      #dde4f0;
+    --muted:       #7a8fad;
+    --radius:      16px;
+
+    /* ── Semantic text tokens (light) ── */
+    --text-primary:   #0c1428;
+    --text-secondary: #1e3050;
+    --text-muted:     #4d6a94;
+    --text-dim:       #8fa3bf;
+
+    /* ── Sidebar tokens (light) ── */
+    --sidebar-bg-start: #f0f4ff;
+    --sidebar-bg-end:   #e4ecff;
+    --sidebar-text:     #2a3f5f;
+    --sidebar-text-dim: #7a90b0;
+
+    /* ── Input token (light) ── */
+    --input-text:        #0c1428;
+    --input-placeholder: #94a3b8;
+
+    /* ── Status badge tokens (light) ── */
+    --badge-pending-bg:     rgba(100,116,139,0.12);
+    --badge-pending-text:   #475569;
+    --badge-pending-border: rgba(100,116,139,0.3);
+
+    --badge-progress-bg:     rgba(234,179,8,0.12);
+    --badge-progress-text:   #92400e;
+    --badge-progress-border: rgba(234,179,8,0.4);
+
+    --badge-complete-bg:     rgba(34,197,94,0.12);
+    --badge-complete-text:   #166534;
+    --badge-complete-border: rgba(34,197,94,0.4);
+
+    --badge-cancel-bg:     rgba(239,68,68,0.1);
+    --badge-cancel-text:   #991b1b;
+    --badge-cancel-border: rgba(239,68,68,0.35);
+
+    --badge-paid-bg:     rgba(34,197,94,0.12);
+    --badge-paid-text:   #166534;
+    --badge-paid-border: rgba(34,197,94,0.4);
+
+    --badge-unpaid-bg:     rgba(234,179,8,0.12);
+    --badge-unpaid-text:   #92400e;
+    --badge-unpaid-border: rgba(234,179,8,0.4);
+
+    --badge-overdue-bg:     rgba(239,68,68,0.1);
+    --badge-overdue-text:   #991b1b;
+    --badge-overdue-border: rgba(239,68,68,0.35);
+
+    --badge-draft-bg:     rgba(100,116,139,0.1);
+    --badge-draft-text:   #475569;
+    --badge-draft-border: rgba(100,116,139,0.3);
+  }
+
+  .dark {
+    --bg:          #060d1a;
+    --fg:          #e8eeff;
+    --primary:     #4f8ef7;
+    --surface:     #0d1b2e;
+    --surface-2:   #111f33;
+    --border:      #1c2f4a;
+    --muted:       #4d6485;
+    --radius:      16px;
+
+    /* ── Semantic text tokens (dark) ── */
+    --text-primary:   #e8eeff;
+    --text-secondary: #c5d0e8;
+    --text-muted:     #7a90b0;
+    --text-dim:       #4d6485;
+
+    /* ── Sidebar tokens (dark) ── */
+    --sidebar-bg-start: #080f1e;
+    --sidebar-bg-end:   #060d1c;
+    --sidebar-text:     #94a3b8;
+    --sidebar-text-dim: #4d6485;
+
+    /* ── Input token (dark) ── */
+    --input-text:        #c5d0e8;
+    --input-placeholder: #4d6485;
+
+    /* ── Status badge tokens (dark) ── */
+    --badge-pending-bg:     rgba(51,65,85,0.7);
+    --badge-pending-text:   #94a3b8;
+    --badge-pending-border: rgba(71,85,105,1);
+
+    --badge-progress-bg:     rgba(234,179,8,0.15);
+    --badge-progress-text:   #fde68a;
+    --badge-progress-border: rgba(234,179,8,0.3);
+
+    --badge-complete-bg:     rgba(34,197,94,0.15);
+    --badge-complete-text:   #86efac;
+    --badge-complete-border: rgba(34,197,94,0.3);
+
+    --badge-cancel-bg:     rgba(239,68,68,0.15);
+    --badge-cancel-text:   #fca5a5;
+    --badge-cancel-border: rgba(239,68,68,0.3);
+
+    --badge-paid-bg:     rgba(34,197,94,0.15);
+    --badge-paid-text:   #86efac;
+    --badge-paid-border: rgba(34,197,94,0.3);
+
+    --badge-unpaid-bg:     rgba(234,179,8,0.15);
+    --badge-unpaid-text:   #fde68a;
+    --badge-unpaid-border: rgba(234,179,8,0.3);
+
+    --badge-overdue-bg:     rgba(239,68,68,0.15);
+    --badge-overdue-text:   #fca5a5;
+    --badge-overdue-border: rgba(239,68,68,0.3);
+
+    --badge-draft-bg:     rgba(51,65,85,0.6);
+    --badge-draft-text:   #94a3b8;
+    --badge-draft-border: rgba(71,85,105,1);
+  }
+}
+
+/* ── Base Reset ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Theme transition ─────────────────────────────────────── */
+html, body, aside, main, div, header, section, article, nav {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ── Semantic text utility classes ───────────────────────── */
+/* ─────────────────────────────────────────────────────────── */
+.t-primary   { color: var(--text-primary); }
+.t-secondary { color: var(--text-secondary); }
+.t-muted     { color: var(--text-muted); }
+.t-dim       { color: var(--text-dim); }
+
+/* ─────────────────────────────────────────────────────────── */
+/* ── Status badge utility classes ────────────────────────── */
+/* ─────────────────────────────────────────────────────────── */
+.badge-pending {
+  background: var(--badge-pending-bg);
+  color:       var(--badge-pending-text);
+  border:      1px solid var(--badge-pending-border);
+}
+.badge-progress {
+  background: var(--badge-progress-bg);
+  color:       var(--badge-progress-text);
+  border:      1px solid var(--badge-progress-border);
+}
+.badge-complete {
+  background: var(--badge-complete-bg);
+  color:       var(--badge-complete-text);
+  border:      1px solid var(--badge-complete-border);
+}
+.badge-cancel {
+  background: var(--badge-cancel-bg);
+  color:       var(--badge-cancel-text);
+  border:      1px solid var(--badge-cancel-border);
+}
+.badge-paid {
+  background: var(--badge-paid-bg);
+  color:       var(--badge-paid-text);
+  border:      1px solid var(--badge-paid-border);
+}
+.badge-unpaid {
+  background: var(--badge-unpaid-bg);
+  color:       var(--badge-unpaid-text);
+  border:      1px solid var(--badge-unpaid-border);
+}
+.badge-overdue {
+  background: var(--badge-overdue-bg);
+  color:       var(--badge-overdue-text);
+  border:      1px solid var(--badge-overdue-border);
+}
+.badge-draft {
+  background: var(--badge-draft-bg);
+  color:       var(--badge-draft-text);
+  border:      1px solid var(--badge-draft-border);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ── Input utility class ─────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────── */
+.themed-input {
+  color: var(--input-text);
+}
+.themed-input::placeholder {
+  color: var(--input-placeholder);
+}
+
+/* ── Light mode overrides ─────────────────────────────────── */
+html:not(.dark) .sidebar-bg {
+  background: linear-gradient(180deg,
+    var(--sidebar-bg-start) 0%,
+    var(--sidebar-bg-end) 100%
+  );
+}
+html:not(.dark) .mesh-bg {
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(37,99,235,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(20,184,166,0.04) 0%, transparent 55%);
+}
+html:not(.dark) .glass {
+  background: rgba(255,255,255,0.82);
+  border-color: rgba(37,99,235,0.1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+html:not(.dark) .nav-active {
+  background: linear-gradient(135deg, rgba(37,99,235,0.12) 0%, rgba(37,99,235,0.05) 100%);
+  border: 1px solid rgba(37,99,235,0.25);
+  color: #1d4ed8;
+  box-shadow: 0 0 14px rgba(37,99,235,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+html:not(.dark) .table-row-hover:hover {
+  background: rgba(37,99,235,0.03);
+}
+
+/* ── Light mode sidebar nav items ────────────────────────── */
+html:not(.dark) .sidebar-nav-item {
+  color: var(--sidebar-text);
+}
+html:not(.dark) .sidebar-nav-item:hover {
+  background: rgba(37,99,235,0.07);
+  color: #1d4ed8;
+}
+html:not(.dark) .sidebar-icon-wrap {
+  background: rgba(37,99,235,0.08);
+}
+html:not(.dark) .sidebar-icon-wrap:hover {
+  background: rgba(37,99,235,0.14);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: 'Outfit', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── Typography ───────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── Selection ────────────────────────────────────────────── */
+::selection {
+  background: rgba(79, 142, 247, 0.25);
+  color: inherit;
+}
+
+/* ── Focus rings ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── Glassmorphism card ───────────────────────────────────── */
+.glass {
+  background: rgba(13, 27, 46, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ── Glow effects ─────────────────────────────────────────── */
+.glow-blue  { box-shadow: 0 0 30px rgba(79, 142, 247, 0.25); }
+.glow-teal  { box-shadow: 0 0 30px rgba(20, 184, 166, 0.25); }
+.glow-rose  { box-shadow: 0 0 30px rgba(244, 63, 94, 0.25); }
+.glow-green { box-shadow: 0 0 30px rgba(34, 197, 94, 0.25); }
+
+/* ── Animated gradient text ───────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #4f8ef7 0%, #38d4c9 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Sidebar active glow ──────────────────────────────────── */
+.nav-active {
+  background: linear-gradient(135deg, rgba(79, 142, 247, 0.25) 0%, rgba(79, 142, 247, 0.1) 100%);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  color: #93c5fd;
+  box-shadow: 0 0 16px rgba(79, 142, 247, 0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* ── Smooth page transitions ──────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Stat card shimmer ────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  animation: shimmer 3s infinite;
+}
+
+/* ── Pulse dot ────────────────────────────────────────────── */
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+  animation: pulseDot 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ── Input / Select base ──────────────────────────────────── */
+input, select, textarea {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+}
+
+/* ── Table row hover ──────────────────────────────────────── */
+.table-row-hover {
+  transition: background 0.15s ease;
+}
+.table-row-hover:hover {
+  background: rgba(79, 142, 247, 0.04);
+}
+
+/* ── Button micro-animation ───────────────────────────────── */
+button, a[role="button"] {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* ── Gradient sidebar background ─────────────────────────── */
+.sidebar-bg {
+  background: linear-gradient(180deg, #080f1e 0%, #050c18 60%, #060d1c 100%);
+}
+
+/* ── Card mesh background ─────────────────────────────────── */
+.mesh-bg {
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(79, 142, 247, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(56, 212, 201, 0.05) 0%, transparent 55%);
+}
